@@ -136,6 +136,7 @@ class monitor:
     def K(self, m):
         #suicide?
         if not m.group('acid') == '-1':
+            self.gtype = Pickle.load(open(os.path.join('pickles/', 'gtype'), 'r'))
             #handle a teamkill
             if m.group('team') == m.group('ateam') and not self.gtype == 'dm':
                 tkline = m.group('aname') + ' ^1TEAMKILLED ^8' + m.group('name') + '!!!'
