@@ -1,0 +1,9 @@
+*.pyc
+*.dat
+*.log
+*.html
+where
+players
+chat
+gtype
+map
