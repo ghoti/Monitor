@@ -24,7 +24,7 @@ class monitor:
             os.remove(os.path.join('') + '.monitor.lock')
             os.sys.exit()
         else:
-            open(os.path.join('') + '.monitor.lock', 'w').close()
+            open(os.path.join('') + '.monitor.lock', 'w')
 
         #the local copy of the game log must meet some specific criteria to be actively parsed by us.  if it is a dated
         #copy or nonexistent, then we play catch up before we start parsing.  this is mostly a 'initial-run' check/fix.
@@ -43,7 +43,7 @@ class monitor:
             self.where = os.path.getsize(logLoc + logfile)
             Pickle.dump(self.where, open(os.path.join('pickles/', 'where'), 'w'))
             print 'remove lock'
-            psssos.remove(os.path.join('') + '.monitor.lock')
+            os.remove(os.path.join('') + '.monitor.lock')
             os.sys.exit(0)
         
         #initialize rcon'ness
@@ -76,7 +76,7 @@ class monitor:
             print self.where
             print ' file: '
             print os.path.getsize(logLoc + logfile)
-            f = open(logLoc + logfile, "r")
+            f = open(logLoc + logfile, 'r')
             f.seek(self.where)
             line = f.readline()
             self.where = f.tell()       #read a line, mark our spot
@@ -127,7 +127,9 @@ class monitor:
     #J signifies a player connecting/joining a game.  A player already playing will still show a 'j' each map as well.
     def J(self, m):
         playername = re.sub(Logparse.removeColor, '', m.group('name'))    #strip color before we do anything
-        self.players.connect(m.group('cid'), m.group('name'), m.group('guid'))
+        self.players.connect(int(m.group('cid')), m.group('name'), m.group('guid'))
+        print m.group('cid'), m.group('name')
+        print self.players.getPlayer(int(m.group('cid'))).name
         self.setPower(self.players.getPlayer(int(m.group('cid'))))
 
     #a K line is a kill event.  Kills can be any form of player->player including suicide as well as world->player
@@ -184,7 +186,7 @@ class monitor:
             #gotta avoid the nasty div by 0, oh noes!!11!1!
             if self.players.getPlayer(int(m.group('cid'))).deaths < 1 and featureStats:
                 statline = playername + ': %i kills and 0 deaths for a ratio of %.2f' % \
-                        (self.players.getPlayers(int(m.group('cid'))).kills, self.players.getPlayers(int(m.group('cid'))).kills)
+                        (self.players.getPlayer(int(m.group('cid'))).kills, self.players.getPlayer(int(m.group('cid'))).kills)
             else:
                 stats = float(self.players.getPlayer(int(m.group('cid'))).kills) / float(self.players.getPlayer(int(m.group('cid'))).deaths)
                 statline = playername + ': %i kills and %i deaths for a ratio of %.2f' % \
@@ -254,7 +256,7 @@ class monitor:
 
     #player disconnects, delete their entry from the dict
     def Q(self, m):
-        self.players.disconnect(m.group('cid'))
+        self.players.disconnect(int(m.group('cid')))
 
     #set the player's power abilities upon joining the server
     def setPower(self, play):
