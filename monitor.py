@@ -221,7 +221,7 @@ class monitor:
                 p = re.match(Logparse.command, text)
                 if p:
                     for i, j in self.players.items():
-                        if j.name.count(p.group('parms')) > 0:
+                        if j.name.lower().count(p.group('parms').lower()) > 0:
                             self.rcon.sndcmd(self.rcon.PUNISH, i)
                             #another slight pause to avoid dreaded rcon block
                             time.sleep(.5)
@@ -250,6 +250,12 @@ class monitor:
                            self.rcon.sndcmd(self.rcon.BAN, self.players.getPlayer(i).pbslot + ' " Banned by Admin"')
                            logger.comlog.info("%s used the BAN command to ban player %s" % \
                                              (playername, j.name))
+
+        elif text.lower().startswith('!rcustom'):
+            if self.players.getPlayer(int(m.group('cid'))).power:
+                p.re.match(Logparse.command, m.group('text'))
+                if p:
+                    pass
 
     #team chat is the same thing as regular chat, we do not concern ourselves with team chat so we send it all to chat
     def team_say(self, m):
