@@ -165,9 +165,23 @@ class monitor:
             else:
                 #if is isn't a suicide, or a teamkill, then it is a legitimate kill.
                 self.players.getPlayer(int(m.group('acid'))).kill()
+
+                #awesome!  a simple streak announcer!
+                if (self.players.getPlayer(int(m.group('acid'))).streak % 5) == 0:
+                    self.rcon.sndcmd(self.rcon.SAY, '"%s is on fire with %i kills since their last death!"' % \
+                    (self.players.getPlayer(int(m.group('acid'))).name, self.players.getPlayer(int(m.group('acid'))).streak))
+
+        #and a streak ending announcement!  double awesome!
+        if self.players.getPlayer(int(m.group('cid'))).streak >= 5:
+            #another pause, rcon block makes life difficult in some cases and I hate purposely slowing myself down >:(
+            time.sleep(.5)
+            self.rcon.sndcmd(self.rcon.SAY, '%s''s streak of %i kills was brutally ended by %s' % \
+                            (self.players.getPlayer(int(m.group('cid'))).name, self.players.getPlayer(int(m.group('cid'))).kills, \
+                            self.players.getPlayer(int(m.group('acid'))).name))
+        #finally, add the death (and reset the streak) of the victim
         self.players.getPlayer(int(m.group('cid'))).death()
 
-    #chat lines.  we loggem and savem to show on the status page
+    #chat lines.  we loggem and savem to show on the status page and we check for potential commands
     def say(self, m):
         playername = re.sub(Logparse.removeColor, '', m.group('name'))
         text = re.sub(Logparse.removeColor, '', m.group('text'))
