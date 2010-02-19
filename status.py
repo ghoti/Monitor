@@ -34,12 +34,11 @@ class status:
                     "<TITLE>Status</TITLE>\n<HEAD>\n<BODY>")
         h.write("<CENTER>=JHF= Games Server Status -- eXtreme -- jhfgames.com<BR>\n" + \
                     "Map: %s -- Players: %i / 20 \n<hr>" % (self.map, len(self.players)))
-        h.write("<TABLE ALIGN=CENTER BORDER=3><TR><TD><B>#</B></TD>" + \
+        h.write("<TABLE ALIGN=CENTER BORDER=3><TR><TD><B>#</B></TD><TD><B>PB</B></TD>" + \
                     "</TD><TD><B>Player</B></TD><TD><B>Kills</B></TD><TD><B>Deaths</B></TD><TD><B>Streak</B></TD><TD><b>Teamkills</b></TD></TR>\n")
-        "iterating through the entire list each and everytime is costly - fix me or i shoot the dog"
         for player in self.players.values():
-            h.write("<TR><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD></TR>\n" % \
-                   (player.slot, player.name, player.kills, player.deaths, player.streak, player.teamkills))
+            h.write("<TR><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD></TR>\n" % \
+                   (player.slot, player.pbslot, player.name, player.kills, player.deaths, player.streak, player.teamkills))
         h.write("</TABLE><HR><TABLE ALIGN=CENTER><TR><TD><B>Latest Messages:</B></TD></TR>\n")
         for i in reversed(self.chat):
             h.write("<TR><TD>%s: %s</TR></TD>\n" % (i[0], i[1].strip("^U")))
