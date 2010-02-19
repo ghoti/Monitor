@@ -38,7 +38,7 @@ class status:
                     "</TD><TD><B>Player</B></TD><TD><B>Kills</B></TD><TD><B>Deaths</B></TD><TD><B>Streak</B></TD><TD><b>Teamkills</b></TD></TR>\n")
         for player in self.players.values():
             h.write("<TR><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD></TR>\n" % \
-                   (player.slot, player.pbslot, player.name, player.kills, player.deaths, player.streak, player.teamkills))
+                   (player.slot, player.pslot, player.name, player.kills, player.deaths, player.streak, player.teamkills))
         h.write("</TABLE><HR><TABLE ALIGN=CENTER><TR><TD><B>Latest Messages:</B></TD></TR>\n")
         for i in reversed(self.chat):
             h.write("<TR><TD>%s: %s</TR></TD>\n" % (i[0], i[1].strip("^U")))

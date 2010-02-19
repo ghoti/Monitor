@@ -15,3 +15,4 @@ class clients(dict):
        return plist
    def getPlayer(self, slot):
        return self[slot]
+       
