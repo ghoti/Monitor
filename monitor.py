@@ -31,18 +31,14 @@ class monitor:
         #this _should_ also catch up if monitor has not run in some time (20 minutes-ish)
         if os.path.isfile(logLoc + logfile) and (time.time() - os.path.getmtime(logLoc + logfile) > 1200):
             ftptail.ftptail()
-            print 'out of date'
             self.where = os.path.getsize(logLoc + logfile)
             Pickle.dump(self.where, open(os.path.join('pickles/', 'where'), 'w'))
-            print 'remove lock'
             os.remove(os.path.join('') + '.monitor.lock')
             os.sys.exit(0)
         elif not os.path.isfile(logLoc + logfile):
             ftptail.ftptail()
-            print 'did not exist'
             self.where = os.path.getsize(logLoc + logfile)
             Pickle.dump(self.where, open(os.path.join('pickles/', 'where'), 'w'))
-            print 'remove lock'
             os.remove(os.path.join('') + '.monitor.lock')
             os.sys.exit(0)
         
@@ -67,14 +63,9 @@ class monitor:
 
         #parse our new info, this is the 'meat of the program ;)
         self.where = Pickle.load(open(os.path.join('pickles/', 'where'), 'r'))
-        print 'entering while loop'
         while 1:
             if self.where == os.path.getsize(logLoc + logfile):
-                print 'same sizes'
                 break
-            print 'where: '
-            print self.where
-            print ' file: '
             print os.path.getsize(logLoc + logfile)
             f = open(logLoc + logfile, 'r')
             f.seek(self.where)
@@ -90,9 +81,7 @@ class monitor:
                 if line.count('InitGame') > 0:
                     logLine = line.split("\\")
                     self.map = logLine[26]
-                    print self.map
                     self.gtype = logLine[22]
-                    print self.gtype
                     #dump these as soon as we get them :D
                     Pickle.dump(self.gtype, open(os.path.join('pickles/', 'gtype'), 'w'))
                     Pickle.dump(self.map, open(os.path.join('pickles/', 'map'), 'w'))
@@ -121,7 +110,6 @@ class monitor:
         Pickle.dump(self.where,  open(os.path.join('pickles/', 'where'), 'w'))
 
         #remove our lock
-        print 'remove lock'
         os.remove(os.path.join('') + '.monitor.lock')
 
     #J signifies a player connecting/joining a game.  A player already playing will still show a 'j' each map as well.
