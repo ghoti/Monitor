@@ -115,8 +115,6 @@ class monitor:
     def J(self, m):
         playername = re.sub(Logparse.removeColor, '', m.group('name'))    #strip color before we do anything
         self.players.connect(int(m.group('cid')), m.group('name'), m.group('guid'))
-        print m.group('cid'), m.group('name')
-        print self.players.getPlayer(int(m.group('cid'))).name
         self.setPower(self.players.getPlayer(int(m.group('cid'))))
 
     #a K line is a kill event.  Kills can be any form of player->player including suicide as well as world->player
@@ -155,15 +153,15 @@ class monitor:
 
                 #awesome!  a simple streak announcer!
                 if (self.players.getPlayer(int(m.group('acid'))).streak % 5) == 0:
-                    self.rcon.sndcmd(self.rcon.SAY, '"%s is on fire with %i kills since their last death!"' % \
-                    (self.players.getPlayer(int(m.group('acid'))).name, self.players.getPlayer(int(m.group('acid'))).streak))
+                    self.rcon.sndcmd(self.rcon.SAY, '%s is on fire with %i kills since their last death!' % \
+                     (self.players.getPlayer(int(m.group('acid'))).name, self.players.getPlayer(int(m.group('acid'))).streak))
 
         #and a streak ending announcement!  double awesome!
         if self.players.getPlayer(int(m.group('cid'))).streak >= 5:
             #another pause, rcon block makes life difficult in some cases and I hate purposely slowing myself down >:(
             time.sleep(.5)
-            self.rcon.sndcmd(self.rcon.SAY, '%s''s streak of %i kills was brutally ended by %s' % \
-                            (self.players.getPlayer(int(m.group('cid'))).name, self.players.getPlayer(int(m.group('cid'))).kills, \
+            self.rcon.sndcmd(self.rcon.SAY, '%s\'s streak of %i kills was brutally ended by %s' % \
+                            (self.players.getPlayer(int(m.group('cid'))).name, self.players.getPlayer(int(m.group('cid'))).streak, \
                             self.players.getPlayer(int(m.group('acid'))).name))
         #finally, add the death (and reset the streak) of the victim
         self.players.getPlayer(int(m.group('cid'))).death()
@@ -214,7 +212,7 @@ class monitor:
             if self.players.getPlayer(int(m.group('cid'))).power:
                 p = re.match(Logparse.command, text)
                 if p:
-                    self.rcon.sndcmd(self.rcon.GAMETYPE, p.group('parms'))
+                    self.rcon.sndcmd(self.rcon.GAMETYPE, p.group('parms').lower())
                     logger.comlog.info('%s used the GAMETYPE command and changed the gametype to %s' % \
                                        (playername, p.group('parms')))
                     
@@ -230,26 +228,30 @@ class monitor:
                             self.rcon.sndcmd(self.rcon.TELL, '%s You are being Punished!' % i)
                             self.chatq([time.strftime('%H:%M:%S', time.localtime()), \
                                       ('%s has been punished' % j.name)])
-                            logger.comlog.info('%s used the punish command and punished %s' \
+                            logger.comlog.info('%s used the PUNISH command and punished %s' \
                                                % (self.players.getPlayer(int(m.group('cid'))).name, j.name))
         #hardcoded disabled for the moment
-        elif text.lower().startswith('!kick') and featureKick:
+        elif text.lower().count('!kick') > 0 and featureKick:
             if self.players.getPlayer(int(m.group('cid'))).power:
                 p = re.match(Logparse.command, text)
                 if p:
                     for i, j in self.players.items():
-                        if j.name.count(p.group('parms')) > 0:
+                        if j.name.lower().count(p.group('parms').lower()) > 0:
                            self.rcon.sndcmd(self.rcon.KICK, self.players.getPlayer(i).pbslot + ' "0 Kicked by Admuin"')
+                           self.chatq([time.strftime('%H:%M:%S', time.localtime()), \
++                                     ('%s has been kicked by an Admin' % j.name)])
                            logger.comlog.info("%s used the KICK command to kick player %s" % \
                                              (playername, j.name))
         #hardcoded disabled for the moment
-        elif text.lower().startswith('!ban') and featureBan:
+        elif text.lower().count('!ban') > 0 and featureBan:
             if self.players.getPlayer(int(m.group('cid'))).power:
                 p = re.match(Logparse.command, m.group('text'))
                 if p:
                    for i, j in self.players.items():
-                       if j.name.count(p.group('parms')) > 0:
+                       if j.name.lower().count(p.group('parms').lower()) > 0:
                            self.rcon.sndcmd(self.rcon.BAN, self.players.getPlayer(i).pbslot + ' " Banned by Admin"')
+                           self.chatq([time.strftime('%H:%M:%S', time.localtime()), \
++                                      ('%s has been Banned by an Admin' % j.name)])
                            logger.comlog.info("%s used the BAN command to ban player %s" % \
                                              (playername, j.name))
 
@@ -292,4 +294,5 @@ class monitor:
     
 if __name__ == "__main__":
     mon = monitor()
+
    
