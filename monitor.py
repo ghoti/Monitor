@@ -179,11 +179,12 @@ class monitor:
             #ignore a player's forgive if no one has teamkilled them."
             if self.players.getPlayer(int(m.group('cid'))).teamkiller:
                 self.chatq([time.strftime('%H:%M:%S', time.localtime()), '%s was forgiven by %s' % \
-                                         (self.players.getPlayer(int(m.group('cid'))).teamkiller, m.group('name'))])
+                                         (self.players.getPlayer(self.players.getPlayer(int(m.group('cid'))).teamkiller).name, m.group('name'))])
                 forgiven = self.players.getPlayer(self.players.getPlayer(int(m.group('cid'))).teamkiller).name
                 forgiveline = m.group('name') + ' has forgiven ' + forgiven
                 self.rcon.sndcmd(self.rcon.SAY, forgiveline)
-                self.players.getPlayer(int(m.group('cid'))).forgive(self.players)
+                self.players.getPlayer(int(m.group('cid'))).forgive(players.getPlayer( \
+                                        self.players.getPlayer(int(m.group('cid'))).teamkiller))
 
         if text.lower().count("!stats") > 0:
             #gotta avoid the nasty div by 0, oh noes!!11!1!
@@ -292,3 +293,4 @@ class monitor:
     
 if __name__ == "__main__":
     mon = monitor()
+   
