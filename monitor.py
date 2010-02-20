@@ -33,20 +33,16 @@ class monitor:
             ftptail.ftptail()
             self.where = os.path.getsize(logLoc + logfile)
             Pickle.dump(self.where, open(os.path.join('pickles/', 'where'), 'w'))
-            os.remove(os.path.join('') + '.monitor.lock')
-            os.sys.exit(0)
+            #remove any left behind player pickles with an out of date log
+            os.remove(os.path.join('pickles/', 'players'))
         elif not os.path.isfile(logLoc + logfile):
             ftptail.ftptail()
             self.where = os.path.getsize(logLoc + logfile)
             Pickle.dump(self.where, open(os.path.join('pickles/', 'where'), 'w'))
-            os.remove(os.path.join('') + '.monitor.lock')
-            os.sys.exit(0)
         
         #initialize rcon'ness
         self.rcon = RCon.RCon(host, port, rconPass)
         #set up a dict to hold players referenced by game slot number
-        #TODO: add referencing by pbslot too, or by default since PB is used for everything - in most cases PB slot is
-        #gameslot + 1 - but this is not for sure yet.
         if os.path.isfile(os.path.join('pickles/', 'players')):
             self.players = Pickle.load(open(os.path.join('pickles/', 'players'), 'r'))
         else:
