@@ -66,7 +66,6 @@ class monitor:
         while 1:
             if self.where == os.path.getsize(logLoc + logfile):
                 break
-            print os.path.getsize(logLoc + logfile)
             f = open(logLoc + logfile, 'r')
             f.seek(self.where)
             line = f.readline()
