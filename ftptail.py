@@ -1,8 +1,7 @@
 from ftplib import FTP
-from config import ftpHost, ftpPort, ftpUser, ftpPass, logfile, logLoc, ftpLogLoc
-import threading
-import time
+from config import ftpHost, ftpPort, ftpUser, ftpPass, logfile, logLoc, ftpLogLoc, usermaps
 import os
+import random
 #import cPickle as Pickle
 
 '''
@@ -17,6 +16,7 @@ class ftptail:
         self.ftp.login(ftpUser, ftpPass)
         self.ftp.voidcmd("TYPE I")
 
+    def updateLog(self):
         if os.path.isfile(logLoc + logfile):
             #load the current file size pickle
             #self.where = Pickle.load(open(os.path.join("pickles/", "ftpwhere"), "r"))
@@ -33,3 +33,9 @@ class ftptail:
         else:
             self.ftp.retrbinary("RETR " + ftpLogLoc + logfile, open(logLoc + logfile, "ab").write)
         self.ftp.close()
+
+    #returns a random map from the usermaps folder on the gameserver
+    def randomMap(self):
+        self.ftp.cwd(usermaps)
+        return random.choice(self.ftp.nlst())
+        

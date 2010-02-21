@@ -42,6 +42,7 @@ class monitor:
         
         #initialize rcon'ness
         self.rcon = RCon.RCon(host, port, rconPass)
+
         #set up a dict to hold players referenced by game slot number
         if os.path.isfile(os.path.join('pickles/', 'players')):
             self.players = Pickle.load(open(os.path.join('pickles/', 'players'), 'r'))
@@ -251,11 +252,11 @@ class monitor:
                            logger.comlog.info("%s used the BAN command to ban player %s" % \
                                              (playername, j.name))
 
-        elif text.lower().startswith('!rcustom'):
+        #lets monitor decide a random custom map to play, randomly picked from the usermap folder on the server so new
+        #maps are automagically added to the pool of potential maps to play :D
+        elif text.lower().count('!rcustom') > 0 and featureRCustom:
             if self.players.getPlayer(int(m.group('cid'))).power:
-                p.re.match(Logparse.command, m.group('text'))
-                if p:
-                    pass
+                self.rcon.sndcmd(self.rcon.MAP, ftptail.ftptail.randomMap())
 
     #team chat is the same thing as regular chat, we do not concern ourselves with team chat so we send it all to chat
     def team_say(self, m):
@@ -286,7 +287,7 @@ class monitor:
 
     #to handle players that may not be in our clients dict we cheat and add them when we see them perform their first action
     def firstSeen(self, m):
-        pass
+        pass                            
     
 if __name__ == "__main__":
     mon = monitor()

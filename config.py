@@ -25,6 +25,8 @@ ftpUser = ""
 ftpPass = ""
 #log location on ftp site - either absolute path, or relative to ftp home dir
 ftpLogLoc = "/"
+#location on the ftp server of the usermaps folder for random map command
+usermaps = '/'
 #filename for our command log, will be created if not exists and placed in the monitor dir
 monitorLog = "commands.log"
 #Option flags for all features, ban and kick are disabled by default until they are safe :-p
@@ -35,6 +37,7 @@ featureGametype = True
 featurePunish = True
 featureKick = False
 featureBan = False
+featureRCustom = True
 logFeatureStats = False
 '''
 status page options, disabled by default - statusPageLocation MUST be writable, I suggest leaving it in the monitor
