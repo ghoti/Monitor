@@ -30,13 +30,15 @@ class monitor:
         #copy or nonexistent, then we play catch up before we start parsing.  this is mostly a 'initial-run' check/fix.
         #this _should_ also catch up if monitor has not run in some time (20 minutes-ish)
         if os.path.isfile(logLoc + logfile) and (time.time() - os.path.getmtime(logLoc + logfile) > 1200):
-            ftptail.ftptail.updateLog()
+            self.ftp = ftptail.ftptail()
+            self.ftp.updateLog()
             self.where = os.path.getsize(logLoc + logfile)
             Pickle.dump(self.where, open(os.path.join('pickles/', 'where'), 'w'))
             #remove any left behind player pickles with an out of date log
             os.remove(os.path.join('pickles/', 'players'))
         elif not os.path.isfile(logLoc + logfile):
-            ftptail.ftptail.updateLog()
+            self.ftp = ftptail.ftptail()
+            self.ftp.updateLog()
             self.where = os.path.getsize(logLoc + logfile)
             Pickle.dump(self.where, open(os.path.join('pickles/', 'where'), 'w'))
         
