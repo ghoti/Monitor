@@ -258,7 +258,7 @@ class monitor:
         #maps are automagically added to the pool of potential maps to play :D
         elif text.lower().count('!rcustom') > 0 and featureRCustom:
             if self.players.getPlayer(int(m.group('cid'))).power:
-                self.rcon.sndcmd(self.rcon.MAP, ftptail.ftptail.randomMap())
+                self.rcon.sndcmd(self.rcon.MAP, self.ftp.randomMap())
 
     #team chat is the same thing as regular chat, we do not concern ourselves with team chat so we send it all to chat
     def team_say(self, m):
