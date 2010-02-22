@@ -32,10 +32,13 @@ class ftptail:
                 #Pickle.dump(self.where, open(os.path.join("pickles/", "ftpwhere")).write)
         else:
             self.ftp.retrbinary("RETR " + ftpLogLoc + logfile, open(logLoc + logfile, "ab").write)
-        self.ftp.close()
 
     #returns a random map from the usermaps folder on the gameserver
     def randomMap(self):
         self.ftp.cwd(usermaps)
         return random.choice(self.ftp.nlst())
+
+    def close(self):
+        self.ftp.close()
+        
         

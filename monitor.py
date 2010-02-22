@@ -57,8 +57,10 @@ class monitor:
         else:
             self.chat = []
             self.chatq([time.strftime('%H:%M:%S', time.localtime()), 'Monitor has started'])
+
         #download new log bits
-        ftptail.ftptail()
+        self.ftp = ftptail.ftptail()
+        self.ftp.updateLog()
 
         #parse our new info, this is the 'meat of the program ;)
         self.where = Pickle.load(open(os.path.join('pickles/', 'where'), 'r'))
@@ -108,6 +110,7 @@ class monitor:
         Pickle.dump(self.where,  open(os.path.join('pickles/', 'where'), 'w'))
 
         #remove our lock
+        self.ftp.close()
         os.remove(os.path.join('') + '.monitor.lock')
 
     #J signifies a player connecting/joining a game.  A player already playing will still show a 'j' each map as well.
@@ -293,5 +296,6 @@ class monitor:
     
 if __name__ == "__main__":
     mon = monitor()
+    
 
    
