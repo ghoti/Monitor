@@ -162,9 +162,13 @@ class monitor:
         if self.players.getPlayer(int(m.group('cid'))).streak >= 5:
             #another pause, rcon block makes life difficult in some cases and I hate purposely slowing myself down >:(
             time.sleep(.5)
-            self.rcon.sndcmd(self.rcon.SAY, '%s\'s streak of %i kills was brutally ended by %s' % \
-                            (self.players.getPlayer(int(m.group('cid'))).name, self.players.getPlayer(int(m.group('cid'))).streak, \
-                            self.players.getPlayer(int(m.group('acid'))).name))
+            if m.group('acid') == '-1':
+                self.rcon.sndcmd(self.rcon.SAY, '%s\'s streak of %i kills was shamefully ended by killing themselves!' % \
+                    (self.players.getPlayer(int(m.group('cid'))).name, self.players.getPlayer(int(m.group('cid'))).streak))
+            else:
+                self.rcon.sndcmd(self.rcon.SAY, '%s\'s streak of %i kills was brutally ended by %s' % \
+                    (self.players.getPlayer(int(m.group('cid'))).name, self.players.getPlayer(int(m.group('cid'))).streak, \
+                    self.players.getPlayer(int(m.group('acid'))).name))
         #finally, add the death (and reset the streak) of the victim
         self.players.getPlayer(int(m.group('cid'))).death()
 
@@ -262,6 +266,9 @@ class monitor:
         elif text.lower().count('!rcustom') > 0 and featureRCustom:
             if self.players.getPlayer(int(m.group('cid'))).power:
                 self.rcon.sndcmd(self.rcon.MAP, self.ftp.randomMap())
+                self.chatq([time.strftime('%H:%M:%S', time.localtime()), \
++                         ('%s has used the RANDOM MAP command' % self.players.getPlayer(int(m.group('cid'))).name)])
+                logger.comlog.info('%s used the RANDOM MAP command' % (self.players.getPlayer(int(m.group('cid'))).name))
 
     #team chat is the same thing as regular chat, we do not concern ourselves with team chat so we send it all to chat
     def team_say(self, m):
